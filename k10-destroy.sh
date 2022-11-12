@@ -9,9 +9,9 @@ starttime=$(date +%s)
 
 echo '-------Deleting Postgresql and Kasten K10'
 
-helm uninstall postgres -n yong-postgresql
+helm uninstall postgres -n root4j-postgresql
 helm uninstall k10 -n kasten-io
-kubectl delete ns yong-postgresql
+kubectl delete ns root4j-postgresql
 kubectl delete ns kasten-io
 
 echo '-------Deleting objects from S3 Storage Bucket'
@@ -23,5 +23,6 @@ duration=$(( $endtime - $starttime ))
 echo "-------Total time is $(($duration / 60)) minutes $(($duration % 60)) seconds."
 echo "" | awk '{print $1}'
 echo "-------Created by Yongkang"
-echo "-------Email me if any suggestions or issues he@yongkang.cloud"
+echo "-------Modified by Ruthford Jay"
+echo "-------Email me if any suggestions or issues ruthford.jay@oracle.com"
 echo "" | awk '{print $1}'

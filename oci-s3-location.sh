@@ -33,5 +33,5 @@ spec:
       name: $OCI_MY_BUCKET
       objectStoreType: S3
       region: $OCI_MY_REGION
-      endpoint: bmeup4b3jwcz.compat.objectstorage.ap-mumbai-1.oraclecloud.com
+      endpoint: $OCI_MY_BUCKET_URI
 EOF

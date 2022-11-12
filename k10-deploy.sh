@@ -47,10 +47,10 @@ echo '-------Set the default ns to k10'
 kubectl config set-context --current --namespace kasten-io
 
 echo '-------Deploying a PostgreSQL database'
-kubectl create namespace yong-postgresql
-# kubectl label namespace yong-postgresql k10/injectKanisterSidecar=true  #Only for GVS snapshots
+kubectl create namespace root4j-postgresql
+# kubectl label namespace root4j-postgresql k10/injectKanisterSidecar=true  #Only for GVS snapshots
 helm repo add bitnami https://charts.bitnami.com/bitnami
-helm install --namespace yong-postgresql postgres bitnami/postgresql --set primary.persistence.size=1Gi
+helm install --namespace root4j-postgresql postgres bitnami/postgresql --set primary.persistence.size=1Gi
 
 echo '-------Output the Cluster ID'
 clusterid=$(kubectl get namespace default -ojsonpath="{.metadata.uid}{'\n'}")
@@ -89,5 +89,6 @@ duration=$(( $endtime - $starttime ))
 echo "-------Total time for K10 deployment is $(($duration / 60)) minutes $(($duration % 60)) seconds."
 echo "" | awk '{print $1}'
 echo "-------Created by Yongkang"
-echo "-------Email me if any suggestions or issues he@yongkang.cloud"
+echo "-------Modified by Ruthford Jay"
+echo "-------Email me if any suggestions or issues ruthford.jay@oracle.com"
 echo "" | awk '{print $1}'

@@ -21,7 +21,7 @@ kubectl get nodes
 ````
 3. Clone the github repo, run below command
 ````
-git clone https://github.com/yongkanghe/oke-k10.git
+git clone https://github.com/ociknowledge/oke-k10.git
 ````
 4. Install the tools and set Oracle Cloud Access Credentials
 ````
