@@ -11,6 +11,10 @@ starttime=$(date +%s)
 # oc annotate sc gp2 storageclass.kubernetes.io/is-default-class-
 # oc annotate sc gp2-csi storageclass.kubernetes.io/is-default-class=true
 
+echo '-------Change StorageClass'
+kubectl patch storageclass oci -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"false"}}}'
+kubectl patch storageclass oci-bv -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+
 echo '-------Install K10'
 kubectl create ns kasten-io
 helm repo add kasten https://charts.kasten.io
@@ -64,12 +68,17 @@ echo -e "\nCopy/Paste the link to browser to access K10 Web UI" >> oke_token
 echo -e "\n$k10ui" >> oke_token
 echo "" | awk '{print $1}' >> oke_token
 sa_secret=$(kubectl get serviceaccount k10-k10 -o json -n kasten-io | grep k10-k10-token | awk '{print $2}' | sed -e 's/\"//g')
-# sa_secret=$(kubectl get serviceaccount k10-k10 -o jsonpath="{.secrets[0].name}{'\n'}" --namespace kasten-io)
 
 echo "Copy/Paste the token below to Signin K10 Web UI" >> oke_token
 echo "" | awk '{print $1}' >> oke_token
 kubectl get secret $sa_secret --namespace kasten-io -ojsonpath="{.data.token}{'\n'}" | base64 --decode | awk '{print $1}' >> oke_token
-# kubectl get secret $sa_secret -n kasten-io -o json | jq '.metadata.annotations."openshift.io/token-secret.value"' | sed -e 's/\"//g' >> oke_token
+echo "" | awk '{print $1}' >> oke_token
+kubectl get secret $sa_secret -n kasten-io -o json | jq '.metadata.annotations."openshift.io/token-secret.value"' | sed -e 's/\"//g' >> oke_token
+echo "" | awk '{print $1}' >> oke_token
+sa_secret=$(kubectl get serviceaccount k10-k10 -o jsonpath="{.secrets[0].name}{'\n'}" --namespace kasten-io)
+kubectl get secret $sa_secret --namespace kasten-io -ojsonpath="{.data.token}{'\n'}" | base64 --decode | awk '{print $1}' >> oke_token
+echo "" | awk '{print $1}' >> oke_token
+kubectl get secret $sa_secret -n kasten-io -o json | jq '.metadata.annotations."openshift.io/token-secret.value"' | sed -e 's/\"//g' >> oke_token
 echo "" | awk '{print $1}' >> oke_token
 
 echo '-------Waiting for K10 services are up running in about 1 or 2 mins'
