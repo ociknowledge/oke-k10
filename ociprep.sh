@@ -5,6 +5,9 @@ echo $AWS_ACCESS_KEY_ID > ociaccess
 echo -n "Enter your Object Storage Secret Access Key and press [ENTER]: "
 read AWS_SECRET_ACCESS_KEY
 echo $AWS_SECRET_ACCESS_KEY >> ociaccess
+echo -n "Enter your Kasten password and press [ENTER]: "
+read KASTEN_USER_PASSWORD
+echo $KASTEN_USER_PASSWORD >> ociaccess
 
 clear
 

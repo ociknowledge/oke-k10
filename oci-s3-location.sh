@@ -2,7 +2,7 @@ echo '-------Creating a S3 profile secret'
 . ./setenv.sh
 
 export AWS_ACCESS_KEY_ID=$(cat ociaccess | head -1)
-export AWS_SECRET_ACCESS_KEY=$(cat ociaccess | tail -1)
+export AWS_SECRET_ACCESS_KEY=$(cat ociaccess | head -2)
 
 #echo '-------Creating a S3 profile secret'
 kubectl create secret generic k10-oci-s3-secret \

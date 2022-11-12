@@ -20,6 +20,8 @@ kubectl create ns kasten-io
 helm repo add kasten https://charts.kasten.io
 helm repo update
 
+export AWS_SECRET_ACCESS_KEY=$(cat ociaccess | head -3)
+
 #For Production, remove the lines ending with =1Gi from helm install
 #For Production, remove the lines ending with airgap from helm install
 helm install k10 kasten/k10 --namespace=kasten-io \
@@ -29,6 +31,8 @@ helm install k10 kasten/k10 --namespace=kasten-io \
   --set global.persistence.jobs.size=1Gi \
   --set global.persistence.logging.size=1Gi \
   --set global.persistence.grafana.size=1Gi \
+  --set auth.basicAuth.enabled=true \
+  --set auth.basicAuth.htpasswd='okek10:$AWS_SECRET_ACCESS_KEY'
   --set auth.tokenAuth.enabled=true \
   --set externalGateway.create=true \
   --set metering.mode=airgap 
@@ -61,8 +65,8 @@ clusterid=$(kubectl get namespace default -ojsonpath="{.metadata.uid}{'\n'}")
 echo "" | awk '{print $1}' > oke_token
 echo My Cluster ID is $clusterid >> oke_token
 
-echo '-------Wait for 1 or 2 mins for the Web UI IP and token'
-kubectl wait --for=condition=ready --timeout=180s -n kasten-io pod -l component=jobs
+echo '-------Wait for 1 or 5 mins for the Web UI IP and token'
+kubectl wait --for=condition=ready --timeout=300s -n kasten-io pod -l component=jobs
 k10ui=http://$(kubectl get svc gateway-ext -n kasten-io | awk '{print $4}' | grep -v EXTERNAL)/k10/#
 echo -e "\nCopy/Paste the link to browser to access K10 Web UI" >> oke_token
 echo -e "\n$k10ui" >> oke_token
@@ -73,15 +77,8 @@ echo "Copy/Paste the token below to Signin K10 Web UI" >> oke_token
 echo "" | awk '{print $1}' >> oke_token
 kubectl get secret $sa_secret --namespace kasten-io -ojsonpath="{.data.token}{'\n'}" | base64 --decode | awk '{print $1}' >> oke_token
 echo "" | awk '{print $1}' >> oke_token
-kubectl get secret $sa_secret -n kasten-io -o json | jq '.metadata.annotations."openshift.io/token-secret.value"' | sed -e 's/\"//g' >> oke_token
-echo "" | awk '{print $1}' >> oke_token
-sa_secret=$(kubectl get serviceaccount k10-k10 -o jsonpath="{.secrets[0].name}{'\n'}" --namespace kasten-io)
-kubectl get secret $sa_secret --namespace kasten-io -ojsonpath="{.data.token}{'\n'}" | base64 --decode | awk '{print $1}' >> oke_token
-echo "" | awk '{print $1}' >> oke_token
-kubectl get secret $sa_secret -n kasten-io -o json | jq '.metadata.annotations."openshift.io/token-secret.value"' | sed -e 's/\"//g' >> oke_token
-echo "" | awk '{print $1}' >> oke_token
 
-echo '-------Waiting for K10 services are up running in about 1 or 2 mins'
+echo '-------Waiting for K10 services are up running in about 1 or 5 mins'
 kubectl wait --for=condition=ready --timeout=300s -n kasten-io pod -l component=catalog
 
 #Create an OCI Object Storage location profile
