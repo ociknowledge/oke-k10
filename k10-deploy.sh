@@ -20,15 +20,27 @@ kubectl create ns kasten-io
 helm repo add kasten https://charts.kasten.io
 helm repo update
 
-export KASTEN_USER_PASSWORD=$(cat ociaccess | head -3)
+#export KASTEN_USER_PASSWORD=$(cat ociaccess | head -3)
+
+helm install k10 kasten/k10 --namespace=kasten-io \
+  --set auth.tokenAuth.enabled=true \
+  --set externalGateway.create=true \
+  --set metering.mode=airgap \
+  --set injectKanisterSidecar.enabled=true \
+  --set-string injectKanisterSidecar.namespaceSelector.matchLabels.k10/injectKanisterSidecar=true
 
 #For Production, remove the lines ending with =1Gi from helm install
 #For Production, remove the lines ending with airgap from helm install
-helm install k10 kasten/k10 --namespace=kasten-io \
-  --set auth.basicAuth.enabled=true \
-  --set auth.basicAuth.htpasswd='okek10:$KASTEN_USER_PASSWORD'
-  --set externalGateway.create=true \
-  --set metering.mode=airgap 
+#helm install k10 kasten/k10 --namespace=kasten-io \
+#  --set global.persistence.metering.size=1Gi \
+#  --set prometheus.server.persistentVolume.size=1Gi \
+#  --set global.persistence.catalog.size=1Gi \
+#  --set global.persistence.jobs.size=1Gi \
+#  --set global.persistence.logging.size=1Gi \
+#  --set global.persistence.grafana.size=1Gi \
+#  --set auth.tokenAuth.enabled=true \
+#  --set externalGateway.create=true \
+#  --set metering.mode=airgap 
 
 #For Generic Volume Snapshots, use the command below
 # helm install k10 kasten/k10 --namespace=kasten-io \
@@ -49,7 +61,7 @@ kubectl config set-context --current --namespace kasten-io
 
 echo '-------Deploying a PostgreSQL database'
 kubectl create namespace root4j-postgresql
-# kubectl label namespace root4j-postgresql k10/injectKanisterSidecar=true  #Only for GVS snapshots
+kubectl label namespace root4j-postgresql k10/injectKanisterSidecar=true  #Only for GVS snapshots
 helm repo add bitnami https://charts.bitnami.com/bitnami
 helm install --namespace root4j-postgresql postgres bitnami/postgresql --set primary.persistence.size=1Gi
 
