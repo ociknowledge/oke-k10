@@ -20,20 +20,13 @@ kubectl create ns kasten-io
 helm repo add kasten https://charts.kasten.io
 helm repo update
 
-export AWS_SECRET_ACCESS_KEY=$(cat ociaccess | head -3)
+export KASTEN_USER_PASSWORD=$(cat ociaccess | head -3)
 
 #For Production, remove the lines ending with =1Gi from helm install
 #For Production, remove the lines ending with airgap from helm install
 helm install k10 kasten/k10 --namespace=kasten-io \
-  --set global.persistence.metering.size=1Gi \
-  --set prometheus.server.persistentVolume.size=1Gi \
-  --set global.persistence.catalog.size=1Gi \
-  --set global.persistence.jobs.size=1Gi \
-  --set global.persistence.logging.size=1Gi \
-  --set global.persistence.grafana.size=1Gi \
   --set auth.basicAuth.enabled=true \
-  --set auth.basicAuth.htpasswd='okek10:$AWS_SECRET_ACCESS_KEY'
-  --set auth.tokenAuth.enabled=true \
+  --set auth.basicAuth.htpasswd='okek10:$KASTEN_USER_PASSWORD'
   --set externalGateway.create=true \
   --set metering.mode=airgap 
 
