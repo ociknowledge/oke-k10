@@ -38,5 +38,5 @@ spec:
       name: $OCI_MY_BUCKET
       objectStoreType: S3
       region: $OCI_MY_REGION
-      endpoint: $OCI_MY_BUCKET_URI
+      endpoint: https://$OCI_MY_BUCKET_URI
 EOF
