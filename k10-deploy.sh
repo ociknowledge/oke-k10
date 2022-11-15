@@ -12,8 +12,8 @@ starttime=$(date +%s)
 # oc annotate sc gp2-csi storageclass.kubernetes.io/is-default-class=true
 
 echo '-------Change StorageClass'
-kubectl patch storageclass oci -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"false"}}}'
-kubectl patch storageclass oci-bv -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+kubectl patch storageClass oci -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+kubectl patch storageClass oci-bv -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"false"}}}'
 
 echo '-------Install K10'
 kubectl create ns kasten-io
@@ -25,7 +25,14 @@ helm repo update
 helm install k10 kasten/k10 --namespace=kasten-io \
   --set externalGateway.create=true \
   --set auth.basicAuth.enabled=true \
-  --set auth.basicAuth.htpasswd='ocik10:{SHA}geW18mxWpmbYzOXIoTI496D7UV4='
+  --set auth.basicAuth.htpasswd='ocik10:{SHA}geW18mxWpmbYzOXIoTI496D7UV4=' \
+  --set global.persistence.metering.size=1Gi \
+  --set prometheus.server.persistentVolume.size=1Gi \
+  --set global.persistence.catalog.size=1Gi \
+  --set global.persistence.jobs.size=1Gi \
+  --set global.persistence.logging.size=1Gi \
+  --set global.persistence.grafana.size=1Gi \
+  --set metering.mode=airgap 
 
 #For Production, remove the lines ending with =1Gi from helm install
 #For Production, remove the lines ending with airgap from helm install
@@ -63,17 +70,17 @@ kubectl label namespace root4j-postgresql k10/injectKanisterSidecar=true  #Only 
 helm repo add bitnami https://charts.bitnami.com/bitnami
 helm install --namespace root4j-postgresql postgres bitnami/postgresql --set primary.persistence.size=1Gi
 
-echo '-------Output the Cluster ID'
-clusterid=$(kubectl get namespace default -ojsonpath="{.metadata.uid}{'\n'}")
-echo "" | awk '{print $1}' > oke_token
-echo My Cluster ID is $clusterid >> oke_token
+#echo '-------Output the Cluster ID'
+#clusterid=$(kubectl get namespace default -ojsonpath="{.metadata.uid}{'\n'}")
+#echo "" | awk '{print $1}' > oke_token
+#echo My Cluster ID is $clusterid >> oke_token
 
 echo '-------Wait for 1 or 5 mins for the Web UI IP and token'
 kubectl wait --for=condition=ready --timeout=300s -n kasten-io pod -l component=jobs
-k10ui=http://$(kubectl get svc gateway-ext -n kasten-io | awk '{print $4}' | grep -v EXTERNAL)/k10/#
-echo -e "\nCopy/Paste the link to browser to access K10 Web UI" >> oke_token
-echo -e "\n$k10ui" >> oke_token
-echo "" | awk '{print $1}' >> oke_token
+#k10ui=http://$(kubectl get svc gateway-ext -n kasten-io | awk '{print $4}' | grep -v EXTERNAL)/k10/#
+#echo -e "\nCopy/Paste the link to browser to access K10 Web UI" >> oke_token
+#echo -e "\n$k10ui" >> oke_token
+#echo "" | awk '{print $1}' >> oke_token
 #sa_secret=$(kubectl get serviceaccount k10-k10 -o json -n kasten-io | grep k10-k10-token | awk '{print $2}' | sed -e 's/\"//g')
 
 #echo "Copy/Paste the token below to Signin K10 Web UI" >> oke_token
@@ -88,10 +95,10 @@ kubectl wait --for=condition=ready --timeout=300s -n kasten-io pod -l component=
 ./oci-s3-location.sh
 
 #Create a Postgresql backup policy
-./postgresql-policy.sh
+#./postgresql-policy.sh
 
-echo '-------Accessing K10 UI'
-cat oke_token
+#echo '-------Accessing K10 UI'
+#cat oke_token
 
 endtime=$(date +%s)
 duration=$(( $endtime - $starttime ))
