@@ -4,6 +4,11 @@ echo '-------Creating a S3 profile secret'
 export AWS_ACCESS_KEY_ID=$(cat ociaccess | head -1)
 export AWS_SECRET_ACCESS_KEY=$(cat ociaccess | tail -1)
 
+echo '$AWS_ACCESS_KEY_ID'
+echo AWS_ACCESS_KEY_ID
+echo '$AWS_SECRET_ACCESS_KEY'
+echo AWS_SECRET_ACCESS_KEY
+
 #echo '-------Creating a S3 profile secret'
 kubectl create secret generic k10-oci-s3-secret \
       --namespace kasten-io \
