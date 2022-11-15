@@ -23,11 +23,9 @@ helm repo update
 #export KASTEN_USER_PASSWORD=$(cat ociaccess | head -3)
 
 helm install k10 kasten/k10 --namespace=kasten-io \
-  --set auth.tokenAuth.enabled=true \
   --set externalGateway.create=true \
-  --set metering.mode=airgap \
-  --set injectKanisterSidecar.enabled=true \
-  --set-string injectKanisterSidecar.namespaceSelector.matchLabels.k10/injectKanisterSidecar=true
+  --set auth.basicAuth.enabled=true \
+  --set auth.basicAuth.htpasswd='ocik10:{SHA}geW18mxWpmbYzOXIoTI496D7UV4='
 
 #For Production, remove the lines ending with =1Gi from helm install
 #For Production, remove the lines ending with airgap from helm install
