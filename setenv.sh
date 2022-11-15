@@ -6,7 +6,7 @@ export MY_INSTANCE_TYPE=t3a.2xlarge          #Customize your favorite machine ty
 export OCI_MY_REGION=us-ashburn-1            #Customize your favorite region
 # https://docs.aws.amazon.com/es_es/AWSEC2/latest/UserGuide/using-regions-availability-zones.html
 export MY_ZONE=us-east-2c                    #Customize your favorite zone
-export OCI_MY_BUCKET=k10                     #Customize your favorite bucket
+export OCI_MY_BUCKET=k20                     #Customize your favorite bucket
 export OCI_MY_BUCKET_URI=idnygso6gagh.compat.objectstorage.us-ashburn-1.oraclecloud.com
 export OCI_MY_OBJECT_STORAGE_PROFILE=oci-os1 #Customize your favorite profile name
 export MY_K8S_VERSION=1.22                   #Customize your Kubernetes Version
