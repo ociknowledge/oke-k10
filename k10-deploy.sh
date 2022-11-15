@@ -74,12 +74,12 @@ k10ui=http://$(kubectl get svc gateway-ext -n kasten-io | awk '{print $4}' | gre
 echo -e "\nCopy/Paste the link to browser to access K10 Web UI" >> oke_token
 echo -e "\n$k10ui" >> oke_token
 echo "" | awk '{print $1}' >> oke_token
-sa_secret=$(kubectl get serviceaccount k10-k10 -o json -n kasten-io | grep k10-k10-token | awk '{print $2}' | sed -e 's/\"//g')
+#sa_secret=$(kubectl get serviceaccount k10-k10 -o json -n kasten-io | grep k10-k10-token | awk '{print $2}' | sed -e 's/\"//g')
 
-echo "Copy/Paste the token below to Signin K10 Web UI" >> oke_token
-echo "" | awk '{print $1}' >> oke_token
-kubectl get secret $sa_secret --namespace kasten-io -ojsonpath="{.data.token}{'\n'}" | base64 --decode | awk '{print $1}' >> oke_token
-echo "" | awk '{print $1}' >> oke_token
+#echo "Copy/Paste the token below to Signin K10 Web UI" >> oke_token
+#echo "" | awk '{print $1}' >> oke_token
+#kubectl get secret $sa_secret --namespace kasten-io -ojsonpath="{.data.token}{'\n'}" | base64 --decode | awk '{print $1}' >> oke_token
+#echo "" | awk '{print $1}' >> oke_token
 
 echo '-------Waiting for K10 services are up running in about 1 or 5 mins'
 kubectl wait --for=condition=ready --timeout=300s -n kasten-io pod -l component=catalog
