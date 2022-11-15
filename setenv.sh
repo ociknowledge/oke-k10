@@ -10,5 +10,4 @@ export OCI_MY_BUCKET=k10                     #Customize your favorite bucket
 export OCI_MY_BUCKET_URI=idnygso6gagh.compat.objectstorage.us-ashburn-1.oraclecloud.com
 export OCI_MY_OBJECT_STORAGE_PROFILE=oci-os1 #Customize your favorite profile name
 export MY_K8S_VERSION=1.22                   #Customize your Kubernetes Version
-chmod +x *.sh
 source ~/.bashrc                             #Set environment variables

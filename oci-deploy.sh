@@ -86,12 +86,13 @@ echo '-------Waiting for K10 services are up running in about 1 or 5 mins'
 kubectl wait --for=condition=ready --timeout=300s -n kasten-io pod -l component=catalog
 
 #Create an OCI Object Storage location profile
-./oci-s3-location.sh
+#./oci-s3-location.sh
 
 k10ui=http://$(kubectl get svc gateway-ext -n kasten-io | awk '{print $4}' | grep -v EXTERNAL)/k10/#
 
 echo '-------Accessing K10 UI'
 echo '$k10ui'
+echo k10ui
 
 endtime=$(date +%s)
 duration=$(( $endtime - $starttime ))
