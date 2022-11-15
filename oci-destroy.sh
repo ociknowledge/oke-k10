@@ -4,6 +4,7 @@ starttime=$(date +%s)
 echo '-------Deleting NGIX and Kasten K10'
 helm uninstall k10 -n kasten-io
 kubectl delete ns nginx-example-base
+kubectl delete ns nginx-example-pv
 kubectl delete ns kasten-io
 
 #echo '-------Deleting objects from S3 Storage Bucket'
