@@ -1,13 +1,13 @@
 starttime=$(date +%s)
 . ./setenv.sh
 
-echo '-------Deleting Postgresql and Kasten K10'
+echo '-------Deleting NGIX and Kasten K10'
 helm uninstall k10 -n kasten-io
 kubectl delete ns nginx-example-base
 kubectl delete ns kasten-io
 
-echo '-------Deleting objects from S3 Storage Bucket'
-oci os object bulk-delete -bn $OCI_MY_BUCKET --force
+#echo '-------Deleting objects from S3 Storage Bucket'
+#oci os object bulk-delete -bn $OCI_MY_BUCKET --force
 
 echo "" | awk '{print $1}'
 endtime=$(date +%s)
