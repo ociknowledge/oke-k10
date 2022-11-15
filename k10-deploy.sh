@@ -64,11 +64,58 @@ helm install k10 kasten/k10 --namespace=kasten-io \
 echo '-------Set the default ns to k10'
 kubectl config set-context --current --namespace kasten-io
 
-echo '-------Deploying a PostgreSQL database'
-kubectl create namespace root4j-postgresql
-kubectl label namespace root4j-postgresql k10/injectKanisterSidecar=true  #Only for GVS snapshots
-helm repo add bitnami https://charts.bitnami.com/bitnami
-helm install --namespace root4j-postgresql postgres bitnami/postgresql --set primary.persistence.size=1Gi
+echo '-------Deploying a NGIX Base'
+cat <<EOF | kubectl apply -f -
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: nginx-example-base
+  labels:
+    app: nginx
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  namespace: nginx-example-base
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - image: nginx:1.17.6
+        name: nginx
+        ports:
+        - containerPort: 80
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: nginx
+  name: my-nginx
+  namespace: nginx-example-base
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    app: nginx
+  type: LoadBalancer
+EOF
+
+#kubectl create namespace root4j-postgresql
+#kubectl label namespace root4j-postgresql k10/injectKanisterSidecar=true  #Only for GVS snapshots
+#helm repo add bitnami https://charts.bitnami.com/bitnami
+#helm install --namespace root4j-postgresql postgres bitnami/postgresql --set primary.persistence.size=1Gi
 
 #echo '-------Output the Cluster ID'
 #clusterid=$(kubectl get namespace default -ojsonpath="{.metadata.uid}{'\n'}")
