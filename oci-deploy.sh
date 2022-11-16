@@ -97,7 +97,7 @@ metadata:
     app: nginx
 spec:
   # Optional:
-  storageClassName: oci-pv
+  storageClassName: oci-bv
   accessModes:
     - ReadWriteOnce
   resources:
@@ -183,6 +183,8 @@ kubectl wait --for=condition=ready --timeout=300s -n kasten-io pod -l component=
 k10ui=http://$(kubectl get svc gateway-ext -n kasten-io | awk '{print $4}' | grep -v EXTERNAL)/k10/#
 echo "-------Copy/Paste the link to browser to access K10 Web UI"
 echo "$k10ui"
+echo "user: ocik10"
+echo "passwrod: WElcome_##123"
 
 endtime=$(date +%s)
 duration=$(( $endtime - $starttime ))
