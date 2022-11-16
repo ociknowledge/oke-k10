@@ -25,7 +25,7 @@ git clone https://github.com/ociknowledge/oke-k10.git
 ````
 4. Install the tools and set Oracle Cloud Access Credentials
 ````
-cd oke-k10;./ociprep.sh
+cd oke-k10;chmod +x *.sh;./ociprep.sh
 ````
 5. Optionally, you can customize the region, bucketname
 ````
@@ -33,19 +33,19 @@ vi setenv.sh
 ````
 # To build the labs, run 
 ````
-./k10-deploy.sh
+./oci-deploy.sh
 ````
 1. Install Kasten K10
-2. Deploy a Postgresql database
+2. Deploy a NGIX App
 3. Create an OCI OS location profile
-4. Create a backup policy for Postgresql
+4. Create a backup policy for NGIX App
 5. Backup jobs scheduled automatically
 
 # To delete the labs, run 
 ````
-./k10-destroy.sh
+./oci-destroy.sh
 ````
-1. Remove Postgresql database
+1. Remove NGIX App
 2. Remove Kasten K10
 3. Remove all the relevant snapshots
 4. Remove the objects from the storage bucket

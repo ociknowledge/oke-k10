@@ -3,10 +3,10 @@ starttime=$(date +%s)
 . ./setenv.sh
 
 echo '-------Change StorageClass'
-kubectl patch storageClass oci -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"false"}}}'
-kubectl patch storageClass oci-bv -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
 kubectl patch storageClass oci -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
 kubectl patch storageClass oci-bv -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"false"}}}'
+kubectl patch storageClass oci -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"false"}}}'
+kubectl patch storageClass oci-bv -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
 
 echo '-------Install K10'
 kubectl create ns kasten-io
@@ -97,7 +97,7 @@ metadata:
     app: nginx
 spec:
   # Optional:
-  # storageClassName: <YOUR_STORAGE_CLASS_NAME>
+  storageClassName: oci-pv
   accessModes:
     - ReadWriteOnce
   resources:
@@ -180,11 +180,7 @@ kubectl wait --for=condition=ready --timeout=300s -n kasten-io pod -l component=
 #Create a Ngix backup policy
 ./ngix-policy.sh
 
-k10ui=http://$(kubectl get svc gateway-ext -n kasten-io | awk '{print $4}' | grep -v EXTERNAL)/k10/#
-
-echo '-------Accessing K10 UI'
-echo '$k10ui'
-echo k10ui
+kubectl get svc gateway-ext --namespace kasten-io -o wide
 
 endtime=$(date +%s)
 duration=$(( $endtime - $starttime ))
