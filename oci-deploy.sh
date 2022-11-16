@@ -180,7 +180,9 @@ kubectl wait --for=condition=ready --timeout=300s -n kasten-io pod -l component=
 #Create a Ngix backup policy
 ./ngix-policy.sh
 
-kubectl get svc gateway-ext --namespace kasten-io -o wide
+k10ui=http://$(kubectl get svc gateway-ext -n kasten-io | awk '{print $4}' | grep -v EXTERNAL)/k10/#
+echo "-------Copy/Paste the link to browser to access K10 Web UI"
+echo "$k10ui"
 
 endtime=$(date +%s)
 duration=$(( $endtime - $starttime ))
