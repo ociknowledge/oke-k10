@@ -27,8 +27,8 @@ helm install k10 kasten/k10 --namespace=kasten-io \
     --set global.persistence.logging.size=1Gi \
     --set global.persistence.grafana.size=1Gi \
     --set metering.mode=airgap 
-    --set injectKanisterSidecar.enabled=true \
-    --set-string injectKanisterSidecar.namespaceSelector.matchLabels.k10/injectKanisterSidecar=true
+#    --set injectKanisterSidecar.enabled=true \
+#    --set-string injectKanisterSidecar.namespaceSelector.matchLabels.k10/injectKanisterSidecar=true
 
 echo '-------Set the default ns to k10'
 kubectl config set-context --current --namespace kasten-io
@@ -36,8 +36,8 @@ kubectl config set-context --current --namespace kasten-io
 echo '-------Create NameSpaces'
 kubectl create namespace nginx-example-base
 kubectl create namespace nginx-example-pv
-kubectl label namespace nginx-example-base k10/injectKanisterSidecar=true
-kubectl label namespace nginx-example-pv k10/injectKanisterSidecar=true
+#kubectl label namespace nginx-example-base k10/injectKanisterSidecar=true
+#kubectl label namespace nginx-example-pv k10/injectKanisterSidecar=true
 
 echo '-------Deploying a NGIX Base'
 cat <<EOF | kubectl apply -f -
@@ -90,7 +90,7 @@ metadata:
     app: nginx
 spec:
   # Optional:
-  storageClassName: oci
+  storageClassName: oci-bv
   accessModes:
     - ReadWriteOnce
   resources:
