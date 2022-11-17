@@ -7,6 +7,7 @@ kubectl patch storageClass oci -p '{"metadata": {"annotations":{"storageclass.ku
 kubectl patch storageClass oci-bv -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"false"}}}'
 kubectl patch storageClass oci -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"false"}}}'
 kubectl patch storageClass oci-bv -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+# kubectl patch storageClass oci-bv -p '{"metadata": {"annotations":{"k10.kasten.io/is-snapshot-class":"true"}}}'
 
 echo '-------Install K10'
 kubectl create ns kasten-io
