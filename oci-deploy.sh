@@ -27,20 +27,18 @@ helm install k10 kasten/k10 --namespace=kasten-io \
     --set global.persistence.logging.size=1Gi \
     --set global.persistence.grafana.size=1Gi \
     --set metering.mode=airgap 
+    --set injectKanisterSidecar.enabled=true \
+    --set-string injectKanisterSidecar.namespaceSelector.matchLabels.k10/injectKanisterSidecar=true
 
 echo '-------Set the default ns to k10'
 kubectl config set-context --current --namespace kasten-io
 
+echo '-------Create NameSpaces'
+kubectl label namespace nginx-example-base k10/injectKanisterSidecar=true
+kubectl label namespace nginx-example-pv k10/injectKanisterSidecar=true
+
 echo '-------Deploying a NGIX Base'
 cat <<EOF | kubectl apply -f -
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: nginx-example-base
-  labels:
-    app: nginx
-
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -81,14 +79,6 @@ EOF
 
 echo '-------Deploying a NGIX Base'
 cat <<EOF | kubectl apply -f -
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: nginx-example-pv
-  labels:
-    app: nginx
-
----
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
@@ -98,7 +88,7 @@ metadata:
     app: nginx
 spec:
   # Optional:
-  storageClassName: oci-bv
+  storageClassName: oci
   accessModes:
     - ReadWriteOnce
   resources:
