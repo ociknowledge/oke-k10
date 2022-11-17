@@ -34,6 +34,8 @@ echo '-------Set the default ns to k10'
 kubectl config set-context --current --namespace kasten-io
 
 echo '-------Create NameSpaces'
+kubectl create namespace nginx-example-base
+kubectl create namespace nginx-example-pv
 kubectl label namespace nginx-example-base k10/injectKanisterSidecar=true
 kubectl label namespace nginx-example-pv k10/injectKanisterSidecar=true
 
