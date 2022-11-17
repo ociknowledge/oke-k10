@@ -98,7 +98,7 @@ metadata:
     app: nginx
 spec:
   # Optional:
-  storageClassName: oci-bv
+  # storageClassName: oci-bv
   accessModes:
     - ReadWriteOnce
   resources:
